@@ -9,8 +9,13 @@ class HomeController(Controller):
     def home(request, response):
         return response.html("<h1>Home Page</h1>")
 
-    def about(request, response):
-        return response.html("<h1>About</h1>")
+    def about(request: Request, response: Response):
+        # return response.html("<h1>About</h1>")
+        return response.template("about.html", {"title": "About", "contacts": [
+            "Contact 1",
+            "Contact 2",
+            "Contact 3"
+        ]})
 
     def blogs(request, response):
         return response.json(

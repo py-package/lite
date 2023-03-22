@@ -72,7 +72,7 @@ class Response:
         """
         from jinja2 import Environment, FileSystemLoader
 
-        env = Environment(loader=FileSystemLoader(searchpath="./templates"))
+        env = Environment(loader=FileSystemLoader(searchpath="./templates"), trim_blocks=True, lstrip_blocks=True)
         template = env.get_template(template_path)
         return template.render(context)
 
