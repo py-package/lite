@@ -11,6 +11,8 @@ setup(
     package_dir={"": "src"},
     install_requires=[
         "click",
+        "jinja2",
+        "hupper",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",

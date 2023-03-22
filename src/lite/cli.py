@@ -1,6 +1,8 @@
 import click
-
-from .core.lite import Lite
+import hupper
+import importlib
+import os
+import sys
 
 @click.group()
 def lite():
@@ -11,6 +13,14 @@ def lite():
 def serve(port):
     from .app import app
     app.port = port
+    
+    # if os.environ.get("LITE_ENV") == "development":
+    reloader = hupper.start_reloader("lite.cli.start")
+    reloader.watch_files(["lite"])
+    reloader.watch_files(["lite.py"])
+    reloader.watch_files(["lite/__init__.py"])
+    reloader.watch_files(["lite/app.py"])
+
     app.start()
 
 @lite.command()
@@ -21,5 +31,8 @@ def test():
 def migrate():
     click.echo("Running migrations...")
 
-if __name__ == "__main__":
+def start(args=sys.argv[1:]):
     lite()
+
+if __name__ == "__main__":
+    start()
