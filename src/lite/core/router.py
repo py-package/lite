@@ -1,10 +1,11 @@
-from collections import defaultdict
 import re
+
 
 class TrieNode:
     def __init__(self):
         self.children = {}
         self.handlers = {}
+
 
 class Router:
     def __init__(self):
@@ -14,22 +15,22 @@ class Router:
         self.special.children["?"] = TrieNode()
 
     def get(self, path, handler):
-        self.add_route(path, handler, method='GET')
+        self.add_route(path, handler, method="GET")
 
     def post(self, path, handler):
-        self.add_route(path, handler, method='POST')
+        self.add_route(path, handler, method="POST")
 
     def put(self, path, handler):
-        self.add_route(path, handler, method='PUT')
+        self.add_route(path, handler, method="PUT")
 
     def patch(self, path, handler):
-        self.add_route(path, handler, method='PATCH')
+        self.add_route(path, handler, method="PATCH")
 
     def delete(self, path, handler):
-        self.add_route(path, handler, method='DELETE')
+        self.add_route(path, handler, method="DELETE")
 
     def options(self, path, handler):
-        self.add_route(path, handler, method='OPTIONS')
+        self.add_route(path, handler, method="OPTIONS")
 
     def add_route(self, path, handler, method):
         parts, queries = self._split_path(path)
@@ -55,7 +56,7 @@ class Router:
                 if part not in current_node.children:
                     current_node.children[part] = TrieNode()
                 current_node = current_node.children[part]
-        
+
         current_node.handlers[method.upper()] = handler
 
     def get_handler(self, path, method):
@@ -84,7 +85,7 @@ class Router:
                         query_params[key] = value
             else:
                 return None
-            
+
         for key, value in queries.items():
             query_params = {key: value}
 
@@ -93,10 +94,10 @@ class Router:
             return (handler, path_variables, query_params)
         else:
             return None
-    
+
     def _split_path(self, path):
         parts = path.split("?")
-        path_parts = re.split('[/]', parts[0])
+        path_parts = re.split("[/]", parts[0])
         if path_parts[-1] == "":
             path_parts = path_parts[:-1]
         if len(parts) == 2:

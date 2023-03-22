@@ -1,6 +1,6 @@
-import os
 import json
 import uuid
+
 
 class Session:
     def __init__(self, session_id=None):

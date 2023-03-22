@@ -10,10 +10,22 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
+        "waitress",
         "click",
         "jinja2",
         "hupper",
     ],
+    extras_require={
+        "dev": [
+            "black",
+            "flake8",
+            "coverage",
+            "pytest",
+            "isort",
+            "pytest-cov",
+            "twine>=1.5.0",
+        ],
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

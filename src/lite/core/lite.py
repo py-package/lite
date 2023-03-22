@@ -1,37 +1,54 @@
-import http
-from http.cookies import SimpleCookie
-import socket
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from waitress import serve
+
+from .router import Router
+
 
 class Lite:
-    def __init__(self, router, host='127.0.0.1', port=8080):
+    def __init__(
+        self, router: Router, host: str = "127.0.0.1", port: int = 8080, threads=1
+    ):
         self.host = host
         self.port = port
         self.router = router
+        self.threads = threads
 
     def start(self):
-        print(f'Starting server on {self.host}:{self.port}')
-        server = HTTPServer((self.host, self.port), self.create_request_handler())
-        server.serve_forever()
+        print(f"Starting server on {self.host}:{self.port}")
+        serve(
+            self.create_request_handler(),
+            host=self.host,
+            port=self.port,
+            threads=self.threads,
+        )
 
     def create_request_handler(self):
-        from .request import Request
-        from .response import Response
-        
-        router = self.router
-        class RequestHandler(Request):
-            def _handle_request(self):
-                handler_info = router.get_handler(self.path, self.command)
-                if handler_info:
-                    res = Response(self)
-                    handler, paths, queries = handler_info
-                    self.queries.update(queries)
-                    response_body = handler(self, res, **paths)
-                    self.wfile.write(b''.join(response_body))
-                    self.end_headers()
-                else:
-                    self.send_error(404, "Not Found")
 
-            do_GET = do_POST = do_PUT = do_PATCH = do_DELETE = do_OPTIONS = _handle_request
+        router = self.router
+
+        class RequestHandler:
+            def __init__(self, environ, start_response):
+                self.environ = environ
+                self.start_response = start_response
+
+            def __iter__(self):
+                from .request import Request
+                from .response import Response
+
+                req = Request(self.environ)
+                res = Response()
+
+                handler_info = router.get_handler(req.path, req.method)
+                if handler_info:
+                    handler, paths, _ = handler_info
+                    response_body = handler(req, res, **paths)
+                    status = f"{res.status_code} {res.reason_phrase}"
+                    headers = list(res.headers.items())
+                else:
+                    response_body = b"Not Found"
+                    status = "404 Not Found"
+                    headers = [("Content-Type", "text/plain")]
+
+                self.start_response(status, headers)
+                return iter(response_body)
 
         return RequestHandler
