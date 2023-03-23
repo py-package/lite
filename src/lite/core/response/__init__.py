@@ -3,11 +3,12 @@ from xml.etree.ElementTree import tostring
 
 
 class Response:
-    def __init__(self):
+    def __init__(self, view=None):
         self.content_type = "text/plain"
         self.headers = {}
         self.status_code = 200
         self.reason_phrase = "OK"
+        self.viewer = view
 
     def start_response(self, status, headers=None):
         if headers is None:
@@ -55,26 +56,26 @@ class Response:
         self.start_response(status)
         return [response_body]
 
-    def template(self, template_path, context=None, status="200 OK"):
+    def view(self, template_path, context=None, status="200 OK"):
         """
         Return a rendered template
         """
         if context is None:
             context = {}
         self.content_type = "text/html"
-        response_body = self.render_template(template_path, context).encode("utf-8")
+        response_body = self.viewer.render(template_path, context).encode("utf-8")
         self.start_response(status)
         return [response_body]
 
-    def render_template(self, template_path, context):
-        """
-        Render a template using Jinja2
-        """
-        from jinja2 import Environment, FileSystemLoader
+    # def render_template(self, template_path, context):
+    #     """
+    #     Render a template using Jinja2
+    #     """
+    #     from jinja2 import Environment, FileSystemLoader
 
-        env = Environment(loader=FileSystemLoader(searchpath="./templates"), trim_blocks=True, lstrip_blocks=True)
-        template = env.get_template(template_path)
-        return template.render(context)
+    #     env = Environment(loader=FileSystemLoader(searchpath="./templates"), trim_blocks=True, lstrip_blocks=True)
+    #     template = env.get_template(template_path)
+    #     return template.render(context)
 
     def text(self, text_string, status="200 OK"):
         """

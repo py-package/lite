@@ -11,7 +11,7 @@ class HomeController(Controller):
 
     def about(request: Request, response: Response):
         # return response.html("<h1>About</h1>")
-        return response.template("about.html", {"title": "About", "contacts": [
+        return response.view("about.html", {"title": "About", "contacts": [
             "Contact 1",
             "Contact 2",
             "Contact 3"
@@ -30,19 +30,25 @@ class HomeController(Controller):
         )
 
     def blog(request: Request, response, id):
-        return response.json({"queries": request.query()})
+        return response.json({
+            'blog': {
+                    'id': id,
+                    'title': 'Single Blog',
+                    'content': 'This is single blog content'
+                }
+        })
 
     def hello(request: Request, response: Response, id):
         return response.json(
             {
                 # 'queries': request.query(),
-                "inputs": request.only("foo", "contact.address.zone"),
+                # "inputs": request.only("foo", "contact.address.zone"),
                 # 'session':
-                # 'blog': {
-                #     'id': id,
-                #     'title': 'Hello',
-                #     'content': 'Hello content'
-                # }
+                'blog': {
+                    'id': id,
+                    'title': 'Hello',
+                    'content': 'Hello content'
+                }
             }
         )
 

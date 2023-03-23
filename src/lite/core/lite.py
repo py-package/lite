@@ -1,6 +1,10 @@
 from waitress import serve
 
 from .router import Router
+from .request import Request
+from .response import Response
+from .view import View
+from .exceptions.http_exception import HTTPException
 
 
 class Lite:
@@ -31,22 +35,26 @@ class Lite:
                 self.start_response = start_response
 
             def __iter__(self):
-                from .request import Request
-                from .response import Response
 
-                req = Request(self.environ)
-                res = Response()
+                try:
+                    req = Request(self.environ)
+                    res = Response(view=View())
 
-                handler_info = router.get_handler(req.path, req.method)
-                if handler_info:
-                    handler, paths, _ = handler_info
-                    response_body = handler(req, res, **paths)
-                    status = f"{res.status_code} {res.reason_phrase}"
-                    headers = list(res.headers.items())
-                else:
-                    response_body = b"Not Found"
-                    status = "404 Not Found"
-                    headers = [("Content-Type", "text/plain")]
+                    handler, path_params = router.get_handler(req.path, req.method)
+                    if handler:
+                        response_body = handler(req, res, **path_params)
+                        status = f"{res.status_code} {res.reason_phrase}"
+                        headers = list(res.headers.items())
+                    else:
+                        raise HTTPException(status_code=404, reason="Not Found")
+                except HTTPException as e:
+                    status = f"{e.status_code} {e.reason}"
+                    response_body = res.view("errors/404.html", status=status)
+                    headers = [("Content-Type", res.content_type)]
+                except Exception as e:
+                    status = "500 Internal Server Error"
+                    response_body = res.view("errors/500.html", status=status)
+                    headers = [("Content-Type", res.content_type)]
 
                 self.start_response(status, headers)
                 return iter(response_body)

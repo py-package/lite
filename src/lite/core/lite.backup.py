@@ -15,7 +15,7 @@ class Lite:
         server.serve_forever()
 
     def create_request_handler(self):
-        from .request import Request
+        from .requests.request import Request
         from .response import Response
 
         router = self.router
