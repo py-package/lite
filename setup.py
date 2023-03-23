@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="lite-gs",
-    version="0.1.0",
+    version="0.1.2",
     description="Lite-gs is a lightweight Python web framework designed for simplicity and ease of use.",
     author="Yubaraj Shrestha",
     author_email="yubaraj@py-package.com",
@@ -22,9 +22,9 @@ setup(
             "flake8",
             "coverage",
             "pytest",
-            "isort",
             "pytest-cov",
             "twine>=1.5.0",
+            "wheel",
         ],
     },
     classifiers=[
