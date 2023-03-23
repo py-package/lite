@@ -1,7 +1,12 @@
 .PHONY: help
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
-
+init: ## Install package dependencies
+	pip install --upgrade pip
+	# install test project and package dependencies
+	pip install -r requirements.txt
+	# install package and dev dependencies (see setup.py)
+	pip install '.[dev]'
 test: ## Run package tests
 	python -m pytest tests
 ci: ## [CI] Run package tests and lint
