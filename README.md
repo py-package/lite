@@ -12,7 +12,7 @@
   <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 </p>
 
-## Lite Framework
+## Lite Framework (WIP)
 
 Lite is a lightweight Python web framework designed for simplicity and ease of use. It provides a minimalistic approach to web development with basic routing and request/response handling.
 
