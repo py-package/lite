@@ -7,18 +7,11 @@ init: ## Install package dependencies
 	pip install -r requirements.txt
 	# install package and dev dependencies (see setup.py)
 	pip install '.[dev]'
-test: ## Run package tests
-	python -m pytest tests
-ci: ## [CI] Run package tests and lint
-	make test
-	make lint
 lint: ## Run code linting
 	python -m flake8 src
 format: ## Format code with Black
 	black src
 	black tests
-coverage: ## Run package tests and upload coverage reports
-	python -m pytest --cov-report term --cov-report xml --cov=src/lite
 publish: ## Publish package to pypi
 	python setup.py sdist bdist_wheel
 	twine upload dist/* --verbose

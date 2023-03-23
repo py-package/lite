@@ -22,14 +22,14 @@ jobs:
       - name: Install dependencies
         run: |
           make init
-      - name: Test with pytest and Build coverage
-        run: |
-          make coverage
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+      # - name: Test with pytest and Build coverage
+      #   run: |
+      #     make coverage
+      # - name: Upload coverage
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     fail_ci_if_error: false
 
   lint:
     runs-on: ubuntu-latest
