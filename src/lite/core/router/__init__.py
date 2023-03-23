@@ -7,6 +7,7 @@ class TrieNode:
         self.handler = None
         self.path = ""
 
+
 class Router:
     def __init__(self):
         self.root = TrieNode()

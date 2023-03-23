@@ -2,15 +2,11 @@ from jinja2 import Environment, FileSystemLoader, ChoiceLoader
 
 
 class View:
-    
     def __init__(self) -> None:
         self.template_engine = Environment(
-            loader=FileSystemLoader([
-                "views/",
-                "src/lite/templates/"
-            ]),
+            loader=FileSystemLoader(["views/", "src/lite/templates/"]),
             trim_blocks=True,
-            lstrip_blocks=True
+            lstrip_blocks=True,
         )
 
     def render(self, template_path, context=None):
