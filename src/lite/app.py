@@ -3,7 +3,6 @@ from .core.lite import Lite
 from .core.request import Request
 from .core.response import Response
 from .core.router import Router
-from .fascade import view
 
 
 class HomeController(Controller):

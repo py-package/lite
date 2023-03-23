@@ -4,7 +4,7 @@ import json
 from http.cookies import SimpleCookie
 from urllib.parse import parse_qs, parse_qsl
 
-from .session import Session
+from ..session import Session
 
 
 class Request:
