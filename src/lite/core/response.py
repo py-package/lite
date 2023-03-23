@@ -55,7 +55,7 @@ class Response:
         self.start_response(status)
         return [response_body]
 
-    def template(self, template_path, context=None, status="200 OK"):
+    def view(self, template_path, context=None, status="200 OK"):
         """
         Return a rendered template
         """

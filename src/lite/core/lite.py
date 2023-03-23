@@ -37,16 +37,15 @@ class Lite:
                 req = Request(self.environ)
                 res = Response()
 
-                handler_info = router.get_handler(req.path, req.method)
-                if handler_info:
-                    handler, paths, _ = handler_info
-                    response_body = handler(req, res, **paths)
+                handler, path_params = router.get_handler(req.path, req.method)
+                if handler:
+                    response_body = handler(req, res, **path_params)
                     status = f"{res.status_code} {res.reason_phrase}"
                     headers = list(res.headers.items())
                 else:
-                    response_body = b"Not Found"
                     status = "404 Not Found"
-                    headers = [("Content-Type", "text/plain")]
+                    response_body = res.view("404.html", status=status)
+                    headers = [("Content-Type", res.content_type)]
 
                 self.start_response(status, headers)
                 return iter(response_body)
