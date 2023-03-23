@@ -1,10 +1,10 @@
 from waitress import serve
 
-from .router import Router
+from .exceptions.http_exception import HTTPException
 from .request import Request
 from .response import Response
+from .router import Router
 from .view import View
-from .exceptions.http_exception import HTTPException
 
 
 class Lite:
@@ -51,7 +51,7 @@ class Lite:
                     status = f"{e.status_code} {e.reason}"
                     response_body = res.view("errors/404.html", status=status)
                     headers = [("Content-Type", res.content_type)]
-                except Exception as e:
+                except Exception:
                     status = "500 Internal Server Error"
                     response_body = res.view("errors/500.html", status=status)
                     headers = [("Content-Type", res.content_type)]

@@ -1,6 +1,4 @@
-import http
-import socket
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import HTTPServer
 
 
 class Lite:
@@ -15,7 +13,7 @@ class Lite:
         server.serve_forever()
 
     def create_request_handler(self):
-        from .requests.request import Request
+        from .request import Request
         from .response import Response
 
         router = self.router
