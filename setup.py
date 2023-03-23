@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name="lite-gs",
     version="0.1.2",
     description="Lite-gs is a lightweight Python web framework designed for simplicity and ease of use.",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Yubaraj Shrestha",
     author_email="yubaraj@py-package.com",
     url="https://github.com/py-package/lite",
