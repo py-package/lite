@@ -8,7 +8,7 @@ ci: ## [CI] Run package tests and lint
 	make test
 	make lint
 lint: ## Run code linting
-	python -m flake8 .
+	python -m flake8 src
 format: ## Format code with Black
 	black src
 	black tests

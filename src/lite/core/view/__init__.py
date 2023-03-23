@@ -1,4 +1,4 @@
-from jinja2 import Environment, FileSystemLoader, ChoiceLoader
+from jinja2 import ChoiceLoader, Environment, FileSystemLoader
 
 
 class View:
