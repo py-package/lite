@@ -1,40 +1,54 @@
-import socket
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from waitress import serve
+
+from .router import Router
+
 
 class Lite:
-    def __init__(self, app, host='127.0.0.1', port=8080):
-        self.app = app
+    def __init__(
+        self, router: Router, host: str = "127.0.0.1", port: int = 8080, threads=1
+    ):
         self.host = host
         self.port = port
+        self.router = router
+        self.threads = threads
 
     def start(self):
-        print(f'Starting server on {self.host}:{self.port}')
-        server = HTTPServer((self.host, self.port), self.create_request_handler())
-        server.serve_forever()
+        print(f"Starting server on {self.host}:{self.port}")
+        serve(
+            self.create_request_handler(),
+            host=self.host,
+            port=self.port,
+            threads=self.threads,
+        )
 
     def create_request_handler(self):
-        app = self.app
 
-        class CustomRequestHandler(BaseHTTPRequestHandler):
-            def do_GET(self):
-                env = self.create_environ()
+        router = self.router
 
-                def start_response(status, headers):
-                    self.send_response(int(status.split()[0]))
-                    for header, value in headers:
-                        self.send_header(header, value)
-                    self.end_headers()
+        class RequestHandler:
+            def __init__(self, environ, start_response):
+                self.environ = environ
+                self.start_response = start_response
 
-                response_body = app(env, start_response)
-                self.wfile.write(b''.join(response_body))
+            def __iter__(self):
+                from .request import Request
+                from .response import Response
 
-            def create_environ(self):
-                env = {
-                    'REQUEST_METHOD': 'GET',
-                    'PATH_INFO': self.path,
-                    'SERVER_NAME': self.server.server_name,
-                    'SERVER_PORT': str(self.server.server_port),
-                }
-                return env
+                req = Request(self.environ)
+                res = Response()
 
-        return CustomRequestHandler
+                handler_info = router.get_handler(req.path, req.method)
+                if handler_info:
+                    handler, paths, _ = handler_info
+                    response_body = handler(req, res, **paths)
+                    status = f"{res.status_code} {res.reason_phrase}"
+                    headers = list(res.headers.items())
+                else:
+                    response_body = b"Not Found"
+                    status = "404 Not Found"
+                    headers = [("Content-Type", "text/plain")]
+
+                self.start_response(status, headers)
+                return iter(response_body)
+
+        return RequestHandler
