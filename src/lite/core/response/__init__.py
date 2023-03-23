@@ -17,6 +17,15 @@ class Response:
         self.headers = headers
         self.status_code, self.reason_phrase = status.split(" ", 1)
 
+    def set_cookie(self, key, value, **kwargs):
+        """
+        Set a cookie
+        """
+        cookie = f"{key}={value}"
+        for key, value in kwargs.items():
+            cookie += f"; {key}={value}"
+        self.headers["Set-Cookie"] = cookie
+
     def _format_json(self, data):
         """
         Recursively convert all FileStorage objects to their filenames

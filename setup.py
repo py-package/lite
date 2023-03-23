@@ -20,6 +20,7 @@ setup(
         "click",
         "jinja2",
         "hupper",
+        "python-dotenv"
     ],
     extras_require={
         "dev": [

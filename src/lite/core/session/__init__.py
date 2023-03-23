@@ -10,13 +10,13 @@ class Session:
             self.id = str(uuid.uuid4())
         self.data = {}
 
-    def get(self, key):
-        return self.data.get(key)
+    def __getitem__(self, key):
+        return self.data[key]
 
-    def set(self, key, value):
+    def __setitem__(self, key, value):
         self.data[key] = value
 
-    def delete(self, key):
+    def __delitem__(self, key):
         if key in self.data:
             del self.data[key]
 

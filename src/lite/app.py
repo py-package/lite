@@ -1,8 +1,11 @@
-from .core.controller import Controller
-from .core.lite import Lite
-from .core.request import Request
-from .core.response import Response
-from .core.router import Router
+from . import Controller
+from . import Lite
+from . import Request
+from . import Response
+from . import Router
+from . import env
+from . import LoggingMiddleware
+from . import CSRFMiddleware
 
 
 class HomeController(Controller):
@@ -58,4 +61,7 @@ router.get("/blogs/:id", HomeController.blog)
 router.post("/blogs/:id/hello", HomeController.hello)
 router.get("/ping", lambda request, response: response.text("pong"))
 
-app = Lite(router)
+application = Lite(router, port=env("PORT", 8080))
+application = application.register_middleware(CSRFMiddleware, LoggingMiddleware)
+
+

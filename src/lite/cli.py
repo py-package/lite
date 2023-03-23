@@ -13,22 +13,21 @@ def lite():
 @click.option(
     "--port",
     type=int,
-    default=8080,
-    help="The port number to bind the server to (default: 8080)",
+    default=8000,
+    help="The port number to bind the server to (default: 8000)",
 )
 def serve(port):
-    from .app import app
+    from .app import application
 
-    app.port = port
+    application.port = port
 
-    # if os.environ.get("LITE_ENV") == "development":
     reloader = hupper.start_reloader("lite.cli.start")
     reloader.watch_files(["lite"])
     reloader.watch_files(["lite.py"])
     reloader.watch_files(["lite/__init__.py"])
     reloader.watch_files(["lite/app.py"])
 
-    app.start()
+    application.start()
 
 
 @lite.command()
